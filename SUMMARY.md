@@ -10,6 +10,7 @@
 * [Substrate Nodeの起動オプション](substrate.md)
 * [Substrate UIをつくる](substrate-uidekasu.md)
 * [Plasmとは？](plasmtoha.md)
+* [Plasmホワイトペーパー イントロダクション](plasmhowaitopp-intorodakushon.md)
 * [PlasmでPlasmaチェーンをつくる](plasmwokasu.md)
 * [Polkadotへの接続](polkadotheno.md)
 * [Parachainをつくる](parachainwotsukuru.md)
