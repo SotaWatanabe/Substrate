@@ -24,7 +24,7 @@ description: 本ドキュメントの目的と背景について
 **免責/クレジット**
 
 * **Substrate/Polkdotに関する著作権とすべてのクレジットはParity TechnologiesとWeb3 Foundationに属します。**
-* 本ドキュメントの二次的な著作権はStakedに属します。
+* 本ドキュメントの二次的な著作権はStake Technologiesに属します。
 * 本ドキュメントにかかれている内容は商用ではありません。
 * コンテンツは最新状態でない場合があります。
 * このコンテンツはParityの許可を得て作成しています。
