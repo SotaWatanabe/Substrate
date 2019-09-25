@@ -6,32 +6,29 @@ description: Plasmバージョン0.2.0
 
 ![](.gitbook/assets/screen-shot-2019-06-01-at-17.43.16.png)
 
-We have been making Plasm for several months. Last week, we [announced](https://medium.com/@satelliteye/release-of-plasm-ver0-2-0-plasma-on-substrate-6dfcf306752f) the official release of Plasm ver0.2.0 which adds Plasma functions to your Substrate chain. From now on, not only we but also **YOU** can make a plasma chain with Plasm and Substrate. I don’t intend to explain what Substrate is and what Plasma is. If you are not familiar with them, you can check [here](https://medium.com/staked-technologies/plasm-plasma-on-substrate-16f017fc41e), here, [here](https://plasma.io/), [Plasm GitHub](https://github.com/stakedtechnologies/Plasm) and [Plasm Client GitHub](https://github.com/stakedtechnologies/plasm-client)
+次にPlasmを使ってPlasmaチェーンを作ってみましょう。Plasmaチェーンとは親チェーン（Parent chain）と子チェーン \(Child  chain）の2つで成り立つ階層構造を指します。
 
-In this article, we would like to show you how to make Plasma chains with Plasm and Substrate. If you want to know the basic functions and philosophy of Plasm, you can check [our previous article](https://medium.com/staked-technologies/plasm-plasma-on-substrate-16f017fc41e).
+
 
 ![](.gitbook/assets/logo.svg)
 
-Plasm ver0.2.0 is a prototype which has the following functions.
+今回の章で見るものはこちらです。
 
-### **①** [**Plasma MVP implementation**](https://github.com/stakedtechnologies/Plasm) <a id="0f23"></a>
+* [Plasma MVP の実装](https://github.com/stakedtechnologies/Plasm)
+  * Plasm Parent : 親チェーンのロジックを持つ。
+  *  Plasm Chlld : 子チェーンのロジックを持つ。
+  *  Plasm Utxo/Merkle : Plasma におけるトランザクションを管理するためのデータ構造。
+* [Plasma Client の実装](https://github.com/stakedtechnologies/plasm-client)
+  * Plasm Util : 上記のチェーンの Endpoint を呼び出すためのラッパー関数群
+  * Plasm Operator : 親チェーンと子チェーンを監視して適切にdeposit/exit を行うためのオペレータ。
+  * Plasm Cli : 上記のチェーンの Endpoint を呼び出すための簡易CLIツール。
+  * Plasm Wallet : 上記のチェーンを使って送金、出金、入金ができる Wallet デモアプリケーション。
 
-1. [**Plasm-Parent**](https://github.com/stakedtechnologies/Plasm/tree/master/core/parent) provides the parent chain’s specification. Mainly, Plasm-Parent has the logic of each [exit game](https://github.com/cryptoeconomicslab/plasma-chamber/wiki/Exit-Game).
-2. [**Plasm-Child**](https://github.com/stakedtechnologies/Plasm/tree/master/core/child) provides the child chain’s specification.
-3. **Plasm** [**UTXO**](https://github.com/stakedtechnologies/Plasm/tree/master/core/utxo)**/**[**Merkle**](https://github.com/stakedtechnologies/Plasm/tree/master/core/merkle) provides the data structure which manages transactions.
-
-### ② [Plasma Client implementation](https://github.com/stakedtechnologies/plasm-client) <a id="73be"></a>
-
-1. **Plasm Util** is a wrapper function to call the endpoint of blockchains.
-2. **Plasm Operator** is monitoring a parent chain and a child chain to make the deposit/exit successful.
-3. **Plasm CLI** is a CLI tool to call the endpoint.
-4. **Plasm Wallet** is an application to send, withdraw and receive tokens.
-
-As a next step, let’s make a wallet demo application on your laptop and see what’s happening.
+Wallet デモアプリケーションを実際に手元で動かしながら中で何が動いているかを見てみます。
 
 ## Step1 <a id="927a"></a>
 
-Clone [**Plasm**](https://github.com/stakedtechnologies/Plasm.git) from our GitHub.
+**Plasm** 本体を GitHub 上から Clone します。
 
 ```text
 > git clone https://github.com/stakedtechnologies/Plasm.git
@@ -41,7 +38,7 @@ Clone [**Plasm**](https://github.com/stakedtechnologies/Plasm.git) from our GitH
 
 ## Step2 <a id="cb97"></a>
 
-Build Plasm Node. After a successful build, you can run Plasma nodes.
+ **Plasm Node** を build して実行します。これで Plasm が提供する Plasma 機能が搭載されたノードを起動することが出来ます。今回は簡単のため一つのノードが親と子両方の役割を担うことにします。
 
 ```text
 > cargo build
@@ -50,17 +47,20 @@ Build Plasm Node. After a successful build, you can run Plasma nodes.
 
 ## Step3 <a id="e492"></a>
 
-Open another terminal and clone Plasm-Client from our GitHub.
+別のターミナルを開いて **Plasm Client** を GitHub 上から Clone します。
+
+```
+> git clone https://github.com/stakedtechnologies/plasm-client.git
+```
 
 ```text
-> git clone https://github.com/stakedtechnologies/plasm-client.git
 > cd plasm-client
 > git checkout v0.2.0
 ```
 
 ## Step4 <a id="f428"></a>
 
-Start **Plasm Operator.** The operator is monitoring both the parent chain and the child chain. When the parent chain deposits tokens to the child chain or the child chain exits tokens to the parent chain, the operator writes the root hash of the child chain on the parent chain.
+**Plasm Operator** を起動します。Operator は親/子チェーンを監視して deposit/exit が実行された際に書くチェーンに適切な処理を行い、子チェーンのルートハッシュを親チェーンに刻むことをします。
 
 ```text
 > cd packages/operator
@@ -71,25 +71,29 @@ Start **Plasm Operator.** The operator is monitoring both the parent chain and t
 
 ![](https://cdn-images-1.medium.com/max/1600/1*hW9OvDD3Pw-OpuXm5QkR7g.png)
 
-If you can see the output below, this project has been successful.
+以上によりデモを行う準備が整いました。 ターミナルに以下のようなログが出力されていれば成功です。
 
 ![](.gitbook/assets/screen-shot-2019-06-01-at-17.43.27.png)
 
-Yeah, you made it, but what actually happened? Let me clarify! \(You can skip if you want. This is complicated, so we will publish another article focused on this topic.\)
+Plasm Operator では親/子チェーンが発行するイベントをキャッチしてそれぞれについて以下の処理を行います。
 
-> Plasm-Operator gets an event which the plasma child/parent chain issues and processes the following steps.
+**親チェーンについて**
 
-> **Parent chain’s events  
-> -** When an operator receives a Submit event, she finalizes the status of the child chain.  
-> - When an operator receives a Deposit event, she sends tokens to the issuer.  
-> - When an operator receives an ExitStart event, she deletes the UTXO which was used for exiting on the child chain.
+* Submit イベントを受け取った時、子チェーンを Commit する。（子チェーンの履歴を finalize する。）親チェーンの Submit イベントは子チェーンが親チェーンに Submit イベントを投げたときに発行される。
+* Deposit イベントを受け取った時、子チェーンのオペレータアカウントから Deposit をしたユーザに子チェーン上で送金する。Deposit イベントはユーザが親チェーンに Deposit 命令をしたときに発行される。
+* ExitStart イベントを受け取った時、子チェーン上で Exit に使った UTXO を削除する。ExitStart イベントはユーザが親チェーンに ExitStart 命令をしたときに発行される。
 
-> **Child chain’s events.**  
-> When an operator receives a Submit event, she submits the root hash to the parent chain. The Submit event on a child chain is issued regularly. （You can decide this logic. For this time, 1 time in 5 blocks.\)
+子チェーンについて
+
+* Submit イベントを受け取った時、親チェーンに子チェーンのルートハッシュを Submit する。子チェーンの Submit イベントは子チェーン上で定められたブロック周期ごとに発行される。（今回は5回に1度）
 
 ## **Step5** <a id="c4df"></a>
 
-Open another terminal and move to **plasm-client** root directory. Then, start Plasm Wallet UI Demo Application.
+**Plasm Wallet UI Demo Application** を起動する。別のターミナルを開き plasm-client のルートディレクトリに移動して以下を実行する。
+
+```text
+> cd packages/wallet
+```
 
 ```text
 > cd packages/wallet
@@ -99,23 +103,20 @@ Open another terminal and move to **plasm-client** root directory. Then, start P
 
 ![](https://cdn-images-1.medium.com/max/1600/1*LDgQNGlKJLU4L7LnPcdhzQ.png)
 
-After that, let’s go to [localhost:8000](http://localhost:8000/) on your browser.
+その後、ブラウザで [localhost:8000](http://localhost:8000/) にアクセスする。  
+Wallet アプリケーションを用いて、チェーン間で資金を移動する手順を見てみましょう。
 
-We will create 2 different accounts and send/receive tokens by using the wallet application I mentioned above.
+## アカウントの登録\(Wallet\) <a id="9027"></a>
 
-## Account Registration <a id="9027"></a>
-
-First, you need to register your demo account. Since a default operator is Alice, you should add **//Alice** ①. Then, create an account ②. You can check Alice’s balance ③.
+まずは、デモで使用するアカウントを登録します。 デフォルトの設定ではオペレータのURIは //Alice になっているので少なくとも Alice は確定で登録します。あとの名前は適当で構いません。seed に “//URI”, name に好きな名前を入れて Create を押すことで登録することが出来ます。
 
 ![](https://cdn-images-1.medium.com/max/2400/1*nD1MPjjGs_6liE6ZAAKfGA.png)
 
-To send tokens from Alice to Bob, Alice to Tom and Bob to Tom, generate Bob’s and Tom’s account as well.
-
 ![](https://cdn-images-1.medium.com/max/2400/1*DqnL6OFlSLYEKYTGsvPt7w.png)
 
-## Token Transfer on Parent Chain <a id="c123"></a>
+## 親チェーンでの送金\(Send Funds @ ParentChain\) <a id="c123"></a>
 
-As a next step, we will send tokens from Alice to Bob and Alice to Tom on the parent chain.
+次に、オペレータである Alice から Bob, Tom に対して親チェーンのコインを送金します。from/to に事前に先程登録したアカウント名を入力し amount で送金する額を決めます。Send を押すとトランザクションが親チェーンに発行されて成功すると右のようになります。アカウント名の横に表示されているのは “ParentBalance” は親チェーンで保持しているコインの量、”ChildBalance” は子チェーンで保持しているコインの量になります。現状はトランザクション手数料を親チェーンのコインから差し引いているので Deposit, Exit をする際にかならず親にコインを持っている必要があります。
 
 ![](https://cdn-images-1.medium.com/max/1600/1*0P8F4R8uv7p6BZkAvcgi0Q.png)
 
@@ -123,35 +124,31 @@ As a next step, we will send tokens from Alice to Bob and Alice to Tom on the pa
 
 ![](https://cdn-images-1.medium.com/max/1200/1*juq-JPTAV-wsGbKIUADGHg.png)Send tokens from Alice to Bob. You can send from Alice to Tom as well.
 
-Enter the account name and decide the amount of token. Then, click the “Send” button. Keep your eye on the “ParentBalance” next to the account name. After a successful transaction, you will notice that Bob’s amount is increasing. Currently, we collect the exchange fee from the sender on the parent chain. So, Bob and Tom need to have some tokens on the parent chain.
-
-## Deposit \(Deposit tokens from Parent Wallet to Child Wallet.\) <a id="040e"></a>
+## 親から子に Deposit \(Deposit coins from ParentWallet to ChildWallet.\) <a id="040e"></a>
 
 ![](https://cdn-images-1.medium.com/max/1600/1*6PE3Qf8xRaRtB8Mwy_v0ZA.png)
 
-Third, we will send tokens from the parent chain to the child chain. For this time, Bob deposits 5,000,000 tokens to the child chain. Just keep in mind, it takes time to increase ChildBalance because the operator checks the event and executes a transaction.
+いよいよ、親チェーンから子チェーンに資金を移します。今回は Bob が 5000000 だけ子チェーンに Deposit したとします。Send を押してトランザクションが受理されるとまず ParentBalance が減少し、しばらく経ってから ChildBalance が反映されることに注意してください。これはオペレータが親チェーンのイベントを監視して子チェーンに対してトランザクションを実行しているからです。（表示されているコインの更新のタイミングが名前を変更した時であることにも注意してください。）
 
 ![](https://cdn-images-1.medium.com/max/1200/1*82M5Bua_oyvG-AzHf8Refw.png)
 
 ![](https://cdn-images-1.medium.com/max/1200/1*rdNutUwSA6EyvTZESgCt8A.png)Deposit \(Parent to Child\)
 
-## Token Transfer on Child Chain <a id="b4a3"></a>
+## 子チェーンでの送金（Send Funds @ ChildWallet） <a id="b4a3"></a>
 
 ![](https://cdn-images-1.medium.com/max/1600/1*Q5iSW0VMv7oUEctVV-ojlA.png)
 
-Fourth, let’s send some tokens from Bob to Tom on the **child chain**.
+続いて子チェーンでの送金を試みます。親チェーンで送金を行う時と同様に from/to に登録したアカウント名、 amount に送金量を入力し Send を押すとことで送金することができます。今回は先程 Bob が Deposit した 5,000,000 のコインのうち 1,000,000 コインを Tom に送金してみましょう。
 
 ![](https://cdn-images-1.medium.com/max/1200/1*URodLDlvlalBNy3Yc02SOQ.png)
 
 ![](https://cdn-images-1.medium.com/max/1200/1*bYHmXubuQvc1qVgyTrpLEQ.png)1,000,000 units from Bon to Tom.
 
-Bob has 5,000,000 tokens. He sent 1,000,000 tokens out of 5,000,000 to Tom.
-
-## Exit Part1（Exit tokens from ChildWallet to ParentWallet.） <a id="9e58"></a>
+## 子から親に Exit①（Exit coins from ChildWallet to ParentWallet.） <a id="9e58"></a>
 
 ![](https://cdn-images-1.medium.com/max/1600/1*JUYBXgDRCszWpoGfJtBC_Q.png)
 
-Exit tokens from Tom’s account on the child chain to his account on the parent chain. If you type your account name, you can find UTXO lists you have. A child chain has all transaction histories you made and tokens are exited based on UTXO.
+先程した送金した子チェーン上のコインを親チェーンに Exit します。アカウント名を入力するとそのアカウントが持っている UTXO のリストが表示されます。子チェーンではコインの履歴を UTXO ベースで保持しており、Exit も UTXO 単位で行います。任意の量のコインを Exit したい時は UTXO を分離\(自分に Exit したい量だけ送金するする\)ことで可能になります。Exit したい UTXO の ExitStart を押すことで Exit を開始することができます。
 
 ![](https://cdn-images-1.medium.com/max/2400/1*EM3sH1quRow-cDoXbrOjAA.png)
 
@@ -159,11 +156,12 @@ Press the ExitStart button so that you can exit your tokens to the parent chain.
 
 ![](https://cdn-images-1.medium.com/max/2400/1*N1Fqy4Gn_DcxC4hiBCSVcw.png)
 
-**BUT**, you have to wait about 60 seconds. It is a Plasma challenge period which we decided. Full node holders can challenge the legitimacy of exits in it.
+しかし、これをしただけではまだ親チェーン上にコインは送られません。デモ上では ExitStart してから 60 秒間がチャレンジ\(不正申告\)の受付期間となり、それが過ぎた後に次で説明する ExitFinalize を行うことでようやく親チェーンへの Exit が完了します。
 
-## Exit Part2（ExitFinalize ChildWallet to ParentWallet.） <a id="57bc"></a>
+## 子から親にExit②（ExitFinalize ChildWallet to ParentWallet.） <a id="57bc"></a>
 
-Click ExitFinalize.
+子チェーンから親チェーンへの Exit を Finalize します。from にアカウント名を入力すると、現在 Exit 中の UTXO のリストが表示されます。このハッシュ値には \(TxHash, OutIndex\) のタプルのハッシュ値が用いられています。最終的に右のように Tom のコイン量を確認すると親チェーンのコインが増えていることが確認できたら成功です。微妙にコインが減っているのは手数料の影響です。![](https://miro.medium.com/max/60/1*k2ZSpldqPr6k6_xhdVGQ9g.png?q=20)  
+
 
 ![](https://cdn-images-1.medium.com/max/2400/1*QiId4iV9snnigqkhZJj-iw.png)
 
@@ -171,29 +169,30 @@ Then,
 
 ![](https://cdn-images-1.medium.com/max/1600/1*KRG-BHrLdbtJeaEzx5ACAA.png)Exit successful!! Awesome!!
 
-Finally, the exit is successful. Well done!! This is a simple demo, but it’s one giant leap for the Polkadot/Substrate community!!
+以上が Plasm を用いたデモアプリケーションの説明、そして Plasm プロトタイプで出来ることの説明になりました。
 
 ## Future Works <a id="3e6d"></a>
 
-### ver0.2.0rc1 <a id="c8e9"></a>
+### ver0.2.0rc1 <a id="7fba"></a>
 
-Actually, we just have one node in this tutorial because we used balances SRML, the default setting. We will divide this node into a parent node and a child node using PlasmUtxo SRML.
+親チェーンと子チェーンを独立して実装します。  
+デモ中では親と子チェーンを簡単のため同じチェーン上で実演していましたが、これは手数料のロジックがデフォルトの balances SRML を用いてるからです。 PlasmUtxo SRML に手数料ロジックを実装することで親と子チェーンの完全な分離を行います。
 
 ### ver0.5.0 <a id="a68c"></a>
 
-Connect our root chain to Polkadot Testnet.
+Polkadot の TestChain に接続します。
 
 ### v0.7.0 <a id="d1e0"></a>
 
-Plasma Cash implementation
+Plasma Cash に対応する予定です。
 
 ### v1.0.0 <a id="3f94"></a>
 
-Plasma Chamber implementation
+Plasma Chamber に対応する予定です。
 
-### Another **Important** Task <a id="c62e"></a>
+### Another Importance Task <a id="c62e"></a>
 
-Improve ExitGame implementation
+ExitGame のテストを実装する予定です。
 
 ## Contact <a id="7da1"></a>
 

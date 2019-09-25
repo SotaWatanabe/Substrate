@@ -32,7 +32,7 @@ description: 本ドキュメントの目的と背景について
 **作者**  
 以下のメンバーが本ドキュメントを作成しました。
 
-* 渡辺創太  Staked株式会社 CEO
-* 山下琢巳 Staked株式会社 CTO
-* 大森亮  Staked株式会社 リードエンジニア
+* 渡辺創太  Stake Technologies株式会社 （旧Staked）
+* 山下琢巳 Stake Technologies株式会社 
+* 大森亮  Stake Technologies株式会社
 
