@@ -17,7 +17,7 @@ description: 本ドキュメントの目的と背景について
 **コンタクト**  
 本ドキュメントに対するフィードバックやSubstrateを用いたビジネスの相談は
 
-* info@staked.co.jp
+* info@stake.co.jp
 
 にご連絡ください。
 
