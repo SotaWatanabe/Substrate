@@ -11,6 +11,7 @@
 * [Substrate UIをつくる](substrate-uidekasu.md)
 * [Plasmとは？](plasmtoha.md)
 * [Plasmホワイトペーパー イントロダクション](plasmhowaitopp-intorodakushon.md)
+* [Plasm ホワイトペーパー Plasm Project概要](plasm-howaitopp-plasm-project.md)
 * [PlasmでPlasmaチェーンをつくる](plasmwokasu.md)
 * [Polkadotへの接続](polkadotheno.md)
 * [Parachainをつくる](parachainwotsukuru.md)
