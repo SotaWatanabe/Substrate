@@ -6,7 +6,7 @@ description: 本ドキュメントの目的と背景について
 
 ![](.gitbook/assets/screen-shot-2019-06-01-at-16.49.29.png)
 
-**All Credits goes to Parity Technologies.**
+**All Credit goes to Parity Technologies.**
 
 **目的**  
 本ドキュメントはSubstrateを用いたプロダクトである[Plasm](https://medium.com/staked-technologies/plasm-plasma-on-substrate-16f017fc41e)を開発する上で、学んだ知見を日本語で集約することを目的としています。私達は、今までのブロックチェーン開発がブロックチェーンに依存しておりコンセンサスアルゴリズムやファイナリティなどが既定のもと開発をする必要がありましたが、Substrateではブロックチェーンそれ自体をカスタマイズすることができるのでより汎用的な用途にブロックチェーンが使えるようになると考えています。
